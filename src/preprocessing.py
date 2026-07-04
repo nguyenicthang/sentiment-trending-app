@@ -18,8 +18,27 @@ df["Sentiment"] = df["Sentiment"].astype(str).str.strip()
 # Kiểm tra các nhãn
 print("Số lượng nhãn:", df["Sentiment"].nunique())
 
+# ==============
+# CHUẨN HÓA PLATFORM
+# ==============
+df["Platform"] = (
+    df["Platform"]
+    .astype(str)
+    .str.strip()
+    .str.title()
+)
+
+print("\n === PLATFORM ===")
+print(df["Platform"].unique())
+
 # Kiểm tra dữ liệu còn thiếu
 print("\n=== KIỂM TRA DỮ LIỆU CÒN THIẾU ===")
+print(df.isnull().sum())
+
+# Xóa NaN
+df = df.dropna()
+
+print("\n === SAU KHI XÓA NaN ===")
 print(df.isnull().sum())
 
 # Kiểm tra dữ liệu trùng lặp
@@ -120,9 +139,9 @@ print("Các nhãn chưa có trong map:", missing)
 
 # Lưu file đã làm sạch
 df.to_csv(
-    "data/clean_sentiment.csv",
+    "data/cleaned_data.csv",
     index = False,
     encoding = "utf-8-sig"
 )
 
-print("Đã lưu file clean_sentiment.csv thành công!")
+print("Đã lưu file cleaned_data.csv thành công!")
