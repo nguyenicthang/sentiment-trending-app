@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 # Đọc dữ liệu
@@ -31,19 +32,11 @@ df["Platform"] = (
 print("\n === PLATFORM ===")
 print(df["Platform"].unique())
 
-# Kiểm tra dữ liệu còn thiếu
-print("\n=== KIỂM TRA DỮ LIỆU CÒN THIẾU ===")
-print(df.isnull().sum())
-
-# Xóa NaN
-df = df.dropna()
-
-print("\n === SAU KHI XÓA NaN ===")
-print(df.isnull().sum())
-
 # Kiểm tra dữ liệu trùng lặp
-print("\n === KIỂM TRA DỮ LIỆU TRÙNG LẶP ===")
+print("\n=== KIỂM TRA DỮ LIỆU TRÙNG LẶP ===")
 print(df.duplicated().sum())
+df = df.drop_duplicates()
+print("Số dòng sau khi xóa trùng:", len(df))
 
 # ==============
 # LABEL MAPPING
@@ -123,25 +116,35 @@ for label in negative:
 for label in neutral:
     label_map[label] = "Neutral"
 
-# Tạo cột Target
-df["Target"] = df["Sentiment"].map(label_map)
+# Lưu nhãn gốc để kiểm tra
+original_sentiment = df["Sentiment"].copy()
 
-# Thống kê TARGET
-print("\n === THỐNG KÊ TARGET ===")
-print(df["Target"].value_counts())
+# Mapping trực tiếp vào cột Sentiment
+df["Sentiment"] = original_sentiment.map(label_map)
 
 # Kiểm tra nhãn nào chưa có trong map
-missing = df[df["Target"].isna()]["Sentiment"].unique()
+missing = original_sentiment[df["Sentiment"].isna()].unique()
+
+print("\n=== KIỂM TRA DỮ LIỆU THIẾU SAU MAPPING ===")
+print(df.isnull().sum())
+
+df = df.dropna()
+
+print("\n=== SAU KHI XÓA NaN ===")
+print(df.isnull().sum())
 
 print("\n === NHỮNG NHÃN CHƯA CÓ TRONG MAP ===")
 print("Số nhãn chưa có trong map:", len(missing))
 print("Các nhãn chưa có trong map:", missing)
 
+# Tạo thư mục processed nếu chưa có
+os.makedirs("data/processed", exist_ok=True)
+
 # Lưu file đã làm sạch
 df.to_csv(
-    "data/cleaned_data.csv",
-    index = False,
-    encoding = "utf-8-sig"
+    "data/processed/cleaned_data.csv",
+    index=False,
+    encoding="utf-8-sig"
 )
 
-print("Đã lưu file cleaned_data.csv thành công!")
+print("Đã lưu file data/processed/cleaned_data.csv thành công!")
