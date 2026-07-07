@@ -32,31 +32,26 @@ def extract_hashtags_regex(text):
     return re.findall(r'#\w+', text)
 
 def main():
-
+    # Đường dẫn file
     input_file = os.path.join("data", "processed", "cleaned_data.csv")
     output_file = os.path.join("data", "processed", "featured_data.csv")
     
     if not os.path.exists(input_file):
-        print(f"❌ Không tìm thấy file '{input_file}'! Bạn hãy kiểm tra lại xem đã pull code mới về chưa nhé.")
+        print(f"❌ Không tìm thấy file '{input_file}'!")
         return
         
     print(f"⏳ Đang đọc dữ liệu từ: {input_file}")
     df = pd.read_csv(input_file)
-    
     if 'Text' not in df.columns:
-        print("❌ Không tìm thấy cột 'Text' trong file cleaned_data.csv!")
+        print("❌ Không tìm thấy cột 'Text' trong file!")
+        print(f"Các cột đang có là: {df.columns.tolist()}")
         return
-        
-    print("✨ Dùng Regex bóc tách Hashtags & tạo cột Hashtag_Count...")
+    print("✨ Dùng Regex bóc tách Hashtags từ cột 'Text'...")
     df['Hashtag_List'] = df['Text'].apply(extract_hashtags_regex)
     df['Hashtag_Count'] = df['Hashtag_List'].apply(len)
-    
-    print("🧹 Dùng NLTK dọn sạch Text thành Clean_Text...")
+    print("🧹 Dọn sạch dữ liệu văn bản bằng NLTK...")
     df['Clean_Text'] = df['Text'].apply(clean_text_with_nltk)
-    
-    
     df = df.drop(columns=['Hashtag_List'])
-    
     print(f"💾 Đang xuất kết quả ra: {output_file}")
     df.to_csv(output_file, index=False, encoding='utf-8-sig')
     print("✅ HOÀN THÀNH XỬ LÝ DỨT ĐIỂM!")
