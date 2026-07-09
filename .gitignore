@@ -1,8 +1,9 @@
-# Bỏ qua thư mục chứa model AI cực nặng
+# Bỏ qua model
 model/
 *.safetensors
 *.bin
 *.h5
 
-# Bỏ qua môi trường ảo (nếu chưa có)
+# Bỏ qua môi trường ảo
 venv/
+__pycache__/
