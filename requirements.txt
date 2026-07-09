@@ -4,3 +4,6 @@ nltk
 streamlit
 plotly
 matplotlib
+wordcloud
+transformers
+torch

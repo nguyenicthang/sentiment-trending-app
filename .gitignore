@@ -1,0 +1,8 @@
+# Bỏ qua thư mục chứa model AI cực nặng
+model/
+*.safetensors
+*.bin
+*.h5
+
+# Bỏ qua môi trường ảo (nếu chưa có)
+venv/
